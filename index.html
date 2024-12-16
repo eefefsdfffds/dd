@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>商品管理系统</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f2f5;
+            color: #333;
+        }
+
+        .login-container, .main-container {
+            margin: 20px auto;
+            padding: 30px;
+            border-radius: 8px;
+            background-color: white;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+        }
+
+        .login-container h2, .main-container h2 {
+            color: #1a73e8;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 20px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background-color: #1a73e8;
+            color: white;
+            font-weight: 500;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            min-width: 120px;
+        }
+
+        button:hover {
+            background-color: #1557b0;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(26, 115, 232, 0.3);
+        }
+
+        input {
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 100%;
+            box-sizing: border-box;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus {
+            border-color: #1a73e8;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
+        }
+
+        .error {
+            color: #d93025;
+            margin: 8px 0;
+            padding: 10px;
+            border-radius: 4px;
+            background-color: #fce8e6;
+            font-size: 14px;
+        }
+
+        .success {
+            color: #137333;
+            margin: 8px 0;
+            padding: 10px;
+            border-radius: 4px;
+            background-color: #e6f4ea;
+            font-size: 14px;
+        }
+
+        .form-container {
+            margin: 20px 0;
+            padding: 25px;
+            border-radius: 8px;
+            background-color: white;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-container h3 {
+            margin: 0 0 20px 0;
+            color: #1a73e8;
+            font-size: 18px;
+        }
+
+        .form-container input {
+            display: block;
+            width: 100%;
+            max-width: 400px;
+            margin: 15px auto;
+        }
+
+        .form-container button {
+            display: block;
+            margin: 20px auto 0;
+            width: 200px;
+        }
+
+        #loginContainer input {
+            max-width: 300px;
+            margin: 10px auto;
+            display: block;
+        }
+
+        #loginContainer button {
+            display: block;
+            margin: 20px auto;
+            width: 200px;
+        }
+
+        #loginMessage {
+            text-align: center;
+        }
+
+        /* 添加响应式设计 */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .login-container, .main-container {
+                margin: 10px;
+                padding: 20px;
+            }
+
+            .controls {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+
+            table {
+                font-size: 14px;
+            }
+
+            th, td {
+                padding: 8px 10px;
+            }
+        }
+
+        .register-container {
+            margin: 20px auto;
+            padding: 30px;
+            border-radius: 8px;
+            background-color: white;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+        }
+
+        .register-container h2 {
+            color: #1a73e8;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .register-container input {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .register-link a {
+            color: #1a73e8;
+            text-decoration: none;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .import-export-buttons {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .import-export-buttons button {
+            min-width: 150px;
+        }
+
+        .total-row {
+            background-color: #f0f7ff;
+            font-size: 16px;
+        }
+
+        .total-row td {
+            border-top: 2px solid #1a73e8;
+        }
+
+        .total-row strong {
+            color: #1a73e8;
+        }
+
+        .edit-form {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus {
+            border-color: #1a73e8;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
+        }
+
+        .form-group input[readonly] {
+            background-color: #f5f5f5;
+            cursor: not-allowed;
+        }
+
+        .form-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .cancel-button {
+            background-color: #666;
+        }
+
+        .cancel-button:hover {
+            background-color: #555;
+        }
+
+        td[contenteditable="true"] {
+            padding: 5px;
+            border: 1px solid #ddd;
+            background-color: #fff;
+            transition: all 0.3s ease;
+        }
+
+        td[contenteditable="true"]:hover {
+            background-color: #f0f7ff;
+            border-color: #1a73e8;
+        }
+
+        td[contenteditable="true"]:focus {
+            outline: none;
+            background-color: #fff;
+            border-color: #1a73e8;
+            box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
+        }
+
+        td button {
+            padding: 4px 8px;
+            font-size: 12px;
+            min-width: auto;
+        }
+
+        .payment-dialog {
+            max-width: 400px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .qr-code-container {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f5f5f5;
+            border-radius: 8px;
+        }
+
+        .qr-code-container img {
+            max-width: 200px;
+            height: auto;
+        }
+
+        .payment-note {
+            color: #666;
+            font-size: 14px;
+            margin: 10px 0;
+        }
+
+        #usageLabel {
+            text-align: center;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div id="mainContainer" class="main-container">
+        <h2>商品管理系统</h2>
+        <div class="controls">
+            <button onclick="showProducts()">显示商品列表</button>
+            <button onclick="showAddProductForm()">添加商品</button>
+            <button onclick="showDeleteProductForm()">删除商品</button>
+            <button onclick="showDiscountForm()">设置折扣</button>
+            <button onclick="showPriceForm()">修改价格</button>
+            <button onclick="showSortOptions()">排序商品</button>
+            <button onclick="exportProducts()">导出商品数据</button>
+            <button onclick="importProducts()">导入商品数据</button>
+        </div>
+
+        <div id="usageLabel" class="usage-label"></div>
+
+        <div id="productTable"></div>
+
+        <div id="addProductForm" class="hidden">
+            <h3>添加新商品</h3>
+            <input type="text" id="newId" placeholder="商品编号">
+            <input type="text" id="newName" placeholder="商品名称">
+            <input type="number" id="newPrice" placeholder="商品价格">
+            <input type="number" id="newDiscount" placeholder="商品折扣" step="0.1" min="0" max="1">
+            <button onclick="addProduct()">确认添加</button>
+        </div>
+
+        <div id="messageArea" class="success"></div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:5000/api';
+
+        const MAX_FREE_USES = 42;  // 设置为42次免费使用次数
+        let usageCount = parseInt(localStorage.getItem('usageCount') || '0');
+        let isPaidUser = localStorage.getItem('isPaidUser') === 'true';
+
+        // 修改使用次数检查函数
+        function checkUsage() {
+            // 检查是否是付费用户
+            if (isPaidUser && checkSubscription()) {
+                return true;  // 付费用户不受限制
+            }
+            
+            // 增加使用次数
+            usageCount++;
+            localStorage.setItem('usageCount', usageCount);
+            updateUsageDisplay();
+            
+            // 达到1000次后显示付费对话框
+            if (usageCount >= MAX_FREE_USES) {
+                showPaymentDialog();
+                return false;
+            }
+            
+            return true;
+        }
+
+        // 修改显示使用状态
+        function updateUsageDisplay() {
+            const usageLabel = document.getElementById('usageLabel');
+            if (isPaidUser && checkSubscription()) {
+                const endDate = new Date(localStorage.getItem('subscriptionEndDate'));
+                usageLabel.textContent = `会员有效期至: ${endDate.toLocaleDateString()}`;
+                usageLabel.style.color = '#137333';
+            } else {
+                const remaining = MAX_FREE_USES - usageCount;
+                if (remaining <= 0) {
+                    usageLabel.textContent = '已达到免费使用次数上限，请付费继续使用';
+                    usageLabel.style.color = '#d93025';
+                } else {
+                    usageLabel.textContent = `已使用 ${usageCount} 次，免费使用次数还剩 ${remaining} 次`;
+                    if (remaining < 100) {
+                        usageLabel.style.color = '#d93025';
+                    } else {
+                        usageLabel.style.color = '#1a73e8';
+                    }
+                }
+            }
+        }
+
+        // 修改支付对话框内容
+        function showPaymentDialog() {
+            const dialog = `
+                <div class="payment-dialog">
+                    <h3>付费继续使用</h3>
+                    <p>您已使用了 ${usageCount} 次</p>
+                    <p>已达到免费使用次数上限（${MAX_FREE_USES}次）</p>
+                    <p style="color: #137333; font-weight: bold;">付费后可继续使用，仅需5元/月</p>
+                    <div class="qr-code-container">
+                        <img src="images/wxpay.jpg" alt="微信支付二维码">
+                        <p>扫码支付 ¥5</p>
+                    </div>
+                    <p class="payment-note">支付完成后请点击下方按钮</p>
+                    <button onclick="checkPaymentStatus()">我已完成支付</button>
+                </div>
+            `;
+            
+            document.getElementById('productTable').innerHTML = dialog;
+        }
+
+        // 修改支付状态检查函数
+        async function checkPaymentStatus() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/check-payment`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                
+                const data = await response.json();
+                if (data.paid) {
+                    isPaidUser = true;
+                    localStorage.setItem('isPaidUser', 'true');
+                    
+                    // 设置订阅到期时间(30天)
+                    const now = new Date();
+                    const subscriptionEndDate = new Date(now);
+                    subscriptionEndDate.setDate(subscriptionEndDate.getDate() + 30);
+                    localStorage.setItem('subscriptionEndDate', subscriptionEndDate.toISOString());
+                    
+                    showMessage('支付成功！您现在可以继续使用系统', 'success');
+                    showProducts();
+                } else {
+                    showMessage('未检测到支付，请确认支付后重试', 'error');
+                }
+            } catch (error) {
+                showMessage('检查支付状态失败，请重试', 'error');
+            }
+        }
+
+        // 商品数据
+        let products = [
+            { id: "1001", name: "苹果", price: 5, discount: 1 },
+            { id: "1002", name: "香蕉", price: 3, discount: 1 },
+            { id: "1003", name: "牛奶", price: 4, discount: 1 },
+            { id: "1004", name: "白菜", price: 1.5, discount: 1 },
+            { id: "1005", name: "西瓜", price: 2, discount: 1 }
+        ];
+
+        // 显示商品列表
+        function showProducts() {
+            if (!checkUsage()) return;
+            const table = `
+                <table>
+                    <tr>
+                        <th>编号</th>
+                        <th>名称</th>
+                        <th>原价</th>
+                        <th>折扣</th>
+                        <th>实际价格</th>
+                        <th>操作</th>
+                    </tr>
+                    ${products.map(p => `
+                        <tr>
+                            <td>${p.id}</td>
+                            <td contenteditable="true" onblur="updateField('${p.id}', 'name', this.textContent)">${p.name}</td>
+                            <td contenteditable="true" onblur="updateField('${p.id}', 'price', this.textContent)">${p.price}</td>
+                            <td>${p.discount}</td>
+                            <td>${(p.price * p.discount).toFixed(2)}</td>
+                            <td><button onclick="saveChanges('${p.id}')">保存</button></td>
+                        </tr>
+                    `).join('')}
+                    <tr class="total-row">
+                        <td colspan="2"><strong>总计</strong></td>
+                        <td><strong>${products.reduce((sum, p) => sum + p.price, 0).toFixed(2)}</strong></td>
+                        <td>-</td>
+                        <td><strong>${products.reduce((sum, p) => sum + (p.price * p.discount), 0).toFixed(2)}</strong></td>
+                        <td>-</td>
+                    </tr>
+                </table>
+            `;
+            document.getElementById('productTable').innerHTML = table;
+        }
+
+        // 获取所有商品
+        async function fetchProducts() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/products`);
+                const data = await response.json();
+                products = data;
+                showProducts();
+            } catch (error) {
+                showMessage('获取商品数据失败', 'error');
+            }
+        }
+
+        // 添加商品
+        async function addProduct() {
+            if (!checkUsage()) return;
+            const id = document.getElementById('newId').value;
+            const name = document.getElementById('newName').value;
+            const price = parseFloat(document.getElementById('newPrice').value);
+            const discount = parseFloat(document.getElementById('newDiscount').value);
+
+            if (!id || !name || isNaN(price) || isNaN(discount)) {
+                showMessage('请填写所有字段！', 'error');
+                return;
+            }
+
+            const newProduct = { id, name, price, discount };
+            
+            try {
+                // 先添加到本地数组
+                products.push(newProduct);
+                // 保存到本地存储
+                saveToLocalStorage();
+                // 更新显示
+                showProducts();
+                showMessage('商品添加成功！', 'success');
+                
+                // 同步到后端
+                const response = await fetch(`${API_BASE_URL}/products`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(newProduct)
+                });
+
+                if (!response.ok) {
+                    throw new Error('后端同步失败');
+                }
+            } catch (error) {
+                console.error('添加商品错误:', error);
+                showMessage('商品已添加到本地，但同步到服务器失败', 'error');
+            }
+        }
+
+        // 添加调试日志函数
+        function logError(error, context) {
+            console.error(`${context}:`, error);
+            if (error.response) {
+                console.error('Response:', error.response);
+            }
+        }
+
+        // 修改showMessage函数添加更多信息
+        function showMessage(message, type) {
+            const messageArea = document.getElementById('messageArea');
+            messageArea.textContent = message;
+            messageArea.className = type;
+            if (type === 'error') {
+                console.error('Error message:', message);
+            }
+            setTimeout(() => {
+                messageArea.textContent = '';
+            }, 3000);
+        }
+
+        // 排序商品
+        function showSortOptions() {
+            const direction = confirm('点击确定按价格序排序，点击取消按价格降序排序');
+            products.sort((a, b) => direction ? a.price - b.price : b.price - a.price);
+            showProducts();
+            showMessage(`商品已按价格${direction ? '升序' : '降序'}排序`, 'success');
+        }
+
+        // 显示删除商品表单
+        function showDeleteProductForm() {
+            const form = `
+                <div class="form-container">
+                    <h3>删除商品</h3>
+                    <input type="text" id="deleteId" placeholder="请输入要删除的商品编号">
+                    <button onclick="deleteProduct()">确认删除</button>
+                </div>
+            `;
+            document.getElementById('productTable').innerHTML = form;
+        }
+
+        // 删除商品
+        async function deleteProduct() {
+            if (!checkUsage()) return;
+            const deleteId = document.getElementById('deleteId').value;
+            
+            try {
+                // 先从本地数组中删除
+                const index = products.findIndex(p => p.id === deleteId);
+                if (index === -1) {
+                    showMessage('未找到指定商品！', 'error');
+                    return;
+                }
+                
+                products.splice(index, 1);
+                // 保存到本地存储
+                saveToLocalStorage();
+                // 更新显示
+                showProducts();
+                showMessage('商品删除成功！', 'success');
+                
+                // 同步到后端
+                try {
+                    const response = await fetch(`${API_BASE_URL}/products/${deleteId}`, {
+                        method: 'DELETE'
+                    });
+                    if (!response.ok) {
+                        throw new Error('后端同步失败');
+                    }
+                } catch (error) {
+                    console.error('删除同步错误:', error);
+                    showMessage('商品已从本地删除，但同步到服务器失败', 'error');
+                }
+            } catch (error) {
+                showMessage('删除失败：' + error.message, 'error');
+            }
+        }
+
+        // 显示置折扣表单
+        function showDiscountForm() {
+            const form = `
+                <div class="form-container">
+                    <h3>设置商品折扣</h3>
+                    <input type="text" id="discountId" placeholder="请输入商品编号">
+                    <input type="number" id="newDiscount" placeholder="请输入新折扣" step="0.1" min="0" max="1">
+                    <button onclick="setDiscount()">确认设置</button>
+                </div>
+            `;
+            document.getElementById('productTable').innerHTML = form;
+        }
+
+        // 设置折扣
+        async function setDiscount() {
+            const productId = document.getElementById('discountId').value;
+            const newDiscount = parseFloat(document.getElementById('newDiscount').value);
+            
+            if (!productId || isNaN(newDiscount)) {
+                showMessage('请填写所有字段！', 'error');
+                return;
+            }
+            
+            try {
+                // 先更新本地数据
+                const product = products.find(p => p.id === productId);
+                if (!product) {
+                    showMessage('未找到指定商品！', 'error');
+                    return;
+                }
+                
+                product.discount = newDiscount;
+                // 保存到本地存储
+                saveToLocalStorage();
+                // 更新显示
+                showProducts();
+                showMessage('折扣设置成功！', 'success');
+                
+                // 同步到后端
+                try {
+                    const response = await fetch(`${API_BASE_URL}/products/${productId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ discount: newDiscount })
+                    });
+                    if (!response.ok) {
+                        throw new Error('后端同步失败');
+                    }
+                } catch (error) {
+                    console.error('折扣更新同步错误:', error);
+                    showMessage('折扣已在本地更新，但同步到服务器失败', 'error');
+                }
+            } catch (error) {
+                showMessage('设置折扣失败：' + error.message, 'error');
+            }
+        }
+
+        // 显示修改价格表单
+        function showPriceForm() {
+            const form = `
+                <div class="form-container">
+                    <h3>修改商品价格</h3>
+                    <input type="text" id="priceId" placeholder="请输入商品编号">
+                    <input type="number" id="newPrice" placeholder="请输入新价格" step="0.1" min="0">
+                    <button onclick="setPrice()">确认修改</button>
+                </div>
+            `;
+            document.getElementById('productTable').innerHTML = form;
+        }
+
+        // 修改价格
+        async function setPrice() {
+            const productId = document.getElementById('priceId').value;
+            const newPrice = parseFloat(document.getElementById('newPrice').value);
+            
+            if (!productId || isNaN(newPrice)) {
+                showMessage('请填写所有字段！', 'error');
+                return;
+            }
+            
+            try {
+                // 先更新本地数
+                const product = products.find(p => p.id === productId);
+                if (!product) {
+                    showMessage('未找到指定商品！', 'error');
+                    return;
+                }
+                
+                product.price = newPrice;
+                // 保存到本���存储
+                saveToLocalStorage();
+                // 更新显示
+                showProducts();
+                showMessage('价格修改成功！', 'success');
+                
+                // 同步到后端
+                try {
+                    const response = await fetch(`${API_BASE_URL}/products/${productId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ price: newPrice })
+                    });
+                    if (!response.ok) {
+                        throw new Error('后端同步失败');
+                    }
+                } catch (error) {
+                    console.error('价格更新同步错误:', error);
+                    showMessage('价格已在本地更新，但同步到服务器失败', 'error');
+                }
+            } catch (error) {
+                showMessage('修改价格失败：' + error.message, 'error');
+            }
+        }
+
+        // 显示添加商品表单
+        function showAddProductForm() {
+            document.getElementById('addProductForm').classList.remove('hidden');
+            document.getElementById('productTable').innerHTML = '';
+        }
+
+        function exportProducts() {
+            // 准备CSV数据
+            const headers = ['编号', '名称', '原价', '折扣', '实际价格'];
+            const csvContent = [
+                headers.join(','),
+                ...products.map(p => [
+                    p.id,
+                    p.name,
+                    p.price,
+                    p.discount,
+                    (p.price * p.discount).toFixed(2)  // 计算并格式化实际价格
+                ].join(','))
+            ].join('\n');
+
+            // 创建Blob对象
+            const blob = new Blob(['\ufeff' + csvContent], { 
+                type: 'text/csv;charset=utf-8;' 
+            });
+
+            // 创建下载链接
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', `商品数据_${new Date().toLocaleDateString()}.csv`);
+            link.style.display = 'none';
+            document.body.appendChild(link);
+
+            // 触发下载
+            link.click();
+
+            // 清理
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+            
+            showMessage('商品数据导出成功！', 'success');
+        }
+
+        function importProducts() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.csv';
+            
+            input.onchange = async (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = async (event) => {
+                    try {
+                        const csvData = event.target.result;
+                        const lines = csvData.split('\n');
+                        // 跳过表头
+                        const newProducts = lines.slice(1).map(line => {
+                            const [id, name, price, discount] = line.split(',');
+                            return {
+                                id: id.trim(),
+                                name: name.trim(),
+                                price: parseFloat(price),
+                                discount: parseFloat(discount)
+                            };
+                        }).filter(p => p.id && p.name); // 过滤掉无数据
+
+                        // 发送到后端保存
+                        const response = await fetch(`${API_BASE_URL}/products/batch`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(newProducts)
+                        });
+
+                        if (response.ok) {
+                            showMessage('商品数据导入成功！', 'success');
+                            fetchProducts(); // 刷新显示
+                        } else {
+                            throw new Error('导入失败');
+                        }
+                    } catch (error) {
+                        showMessage('导入失败：' + error.message, 'error');
+                    }
+                };
+                reader.readAsText(file);
+            };
+
+            input.click();
+        }
+
+        // 保存数据到localStorage
+        function saveToLocalStorage() {
+            localStorage.setItem('products', JSON.stringify(products));
+        }
+
+        // 从localStorage加载数据
+        function loadFromLocalStorage() {
+            const savedProducts = localStorage.getItem('products');
+            
+            if (savedProducts) {
+                products = JSON.parse(savedProducts);
+            }
+        }
+
+        // 在页面加载时初始化数据
+        document.addEventListener('DOMContentLoaded', function() {
+            loadFromLocalStorage();
+            showProducts(); // 显示加载的商品数据
+        });
+
+        // 添���显示编辑表单的函数
+        function showEditForm(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+
+            const form = `
+                <div class="form-container">
+                    <h3>编辑商品信</h3>
+                    <div class="edit-form">
+                        <div class="form-group">
+                            <label>编号：</label>
+                            <input type="text" id="editId" value="${product.id}" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>名称：</label>
+                            <input type="text" id="editName" value="${product.name}">
+                        </div>
+                        <div class="form-group">
+                            <label>原价：</label>
+                            <input type="number" id="editPrice" value="${product.price}" step="0.01" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>折扣：</label>
+                            <input type="number" id="editDiscount" value="${product.discount}" step="0.1" min="0" max="1">
+                        </div>
+                        <div class="form-buttons">
+                            <button onclick="saveEdit('${product.id}')">保存</button>
+                            <button onclick="showProducts()" class="cancel-button">取消</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('productTable').innerHTML = form;
+        }
+
+        // 修改保存编辑的函数
+        async function saveEdit(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+
+            const newName = document.getElementById('editName').value;
+            const newPrice = parseFloat(document.getElementById('editPrice').value);
+            const newDiscount = parseFloat(document.getElementById('editDiscount').value);
+
+            if (!newName || isNaN(newPrice) || isNaN(newDiscount)) {
+                showMessage('请填写所有字段！', 'error');
+                return;
+            }
+
+            if (newPrice <= 0) {
+                showMessage('价格必须大于0！', 'error');
+                return;
+            }
+
+            if (newDiscount <= 0 || newDiscount > 1) {
+                showMessage('折扣须在0-1之间！', 'error');
+                return;
+            }
+
+            const updatedProduct = {
+                name: newName,
+                price: newPrice,
+                discount: newDiscount
+            };
+
+            console.log('准备更新商品:', updatedProduct); // 添加调试日志
+
+            try {
+                // 先尝试同步到后端
+                const response = await fetch(`${API_BASE_URL}/products/${productId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(updatedProduct)
+                });
+
+                console.log('收到响应状态:', response.status); // 添加调试日志
+                const data = await response.json();
+                console.log('响应数据:', data); // 添加调试日志
+
+                if (response.ok) {
+                    // 如果后端更新成功，再更新本地数据
+                    Object.assign(product, updatedProduct);
+                    saveToLocalStorage();
+                    showMessage('更新成功！', 'success');
+                    showProducts();
+                } else {
+                    throw new Error(data.error || '更新失败');
+                }
+            } catch (error) {
+                console.error('保存错误:', error);
+                showMessage('保存失败：' + error.message, 'error');
+            }
+        }
+
+        // 添加更新字段函数
+        function updateField(productId, field, value) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+
+            if (field === 'price') {
+                const numValue = parseFloat(value);
+                if (isNaN(numValue) || numValue <= 0) {
+                    showMessage('请输入有效的价格！', 'error');
+                    showProducts(); // 重置显示
+                    return;
+                }
+                product[field] = numValue;
+            } else {
+                product[field] = value;
+            }
+        }
+
+        // 添加保存更改函数
+        async function saveChanges(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/products/${productId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        name: product.name,
+                        price: product.price
+                    })
+                });
+
+                if (response.ok) {
+                    saveToLocalStorage();
+                    showMessage('更新成功！', 'success');
+                } else {
+                    throw new Error('更新失败');
+                }
+            } catch (error) {
+                console.error('保存错误:', error);
+                showMessage('保存失败：' + error.message, 'error');
+                showProducts(); // 重置显示
+            }
+        }
+
+        // 添加订阅到期时间检查
+        function checkSubscription() {
+            const subscriptionEndDate = localStorage.getItem('subscriptionEndDate');
+            if (subscriptionEndDate) {
+                const endDate = new Date(subscriptionEndDate);
+                if (endDate > new Date()) {
+                    return true; // 订阅仍然有效
+                }
+            }
+            return false;
+        }
+    </script>
+</body>
+</html> 
